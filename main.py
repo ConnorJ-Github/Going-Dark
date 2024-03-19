@@ -14,18 +14,24 @@ WIN = pygame.display.set_mode((WIDTH,HEIGHT))
 
 pygame.display.set_caption("Going Dark")
 
+#Colours
+
+Background_CLR = (255,255,255) #WHite
+
+WHITE = (255,255,255)
+BLACK = (0,0,0)
+
+#Fonts
+
+font = pygame.font.Font('MPLUSRounded1c-Regular.ttf',25)
+
 #game states
 
 main_menu = True
 
 play_game = False
 
-#Colours
-
-Background_CLR = (255,255,255) #WHite
-
-
-#Buttons
+#Images
 
 play_img = pygame.image.load('Assets\Play_Button.png')
 play_img = pygame.transform.scale(play_img, (150,150))
@@ -33,20 +39,29 @@ play_img = pygame.transform.scale(play_img, (150,150))
 exit_img = pygame.image.load('Assets\Exit_Button.png')
 exit_img = pygame.transform.scale(exit_img, (150,150))
 
-play_button = button.Button(228,100, play_img)
-exit_button = button.Button(230,180, exit_img)
-
-#Images
-
 Golden_Key = pygame.image.load('Assets\Golden Key.png')
 Golden_Key = pygame.transform.scale(Golden_Key, (75,75))
 
 Background_image = pygame.image.load('Assets\Background_Image.png')
 
+#Buttons
+
+play_button = button.Button(228,100, play_img)
+exit_button = button.Button(230,180, exit_img)
+
+key_button = button.Button(50,50, Golden_Key)
 
 
 #Game FPS
 FPS = 60
+
+#Score
+
+score = 0
+
+def current_score(score):
+    score_text = font.render(f'Score: {score}', True, WHITE)
+    WIN.blit(score_text,(0,0))
 
 
 def draw_menu():
@@ -66,11 +81,19 @@ def draw_menu():
 
 def draw_game():
 
+    global score
+    
+
     global main_menu
     main_menu = False
 
     WIN.blit(Background_image, (0, 0))
-    WIN.blit(Golden_Key, (0,0))
+    
+    if key_button.draw(WIN):
+        score += 1
+
+
+    current_score(score)
 
     pygame.display.update()
 
