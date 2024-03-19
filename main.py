@@ -41,6 +41,9 @@ exit_button = button.Button(230,180, exit_img)
 Golden_Key = pygame.image.load('Assets\Golden Key.png')
 Golden_Key = pygame.transform.scale(Golden_Key, (75,75))
 
+Background_image = pygame.image.load('Assets\Background_Image.png')
+
+
 
 #Game FPS
 FPS = 60
@@ -66,8 +69,7 @@ def draw_game():
     global main_menu
     main_menu = False
 
-    WIN.fill(Background_CLR)
-
+    WIN.blit(Background_image, (0, 0))
     WIN.blit(Golden_Key, (0,0))
 
     pygame.display.update()
