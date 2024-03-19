@@ -33,33 +33,6 @@ play_img = pygame.transform.scale(play_img, (150,150))
 exit_img = pygame.image.load('Assets\Exit_Button.png')
 exit_img = pygame.transform.scale(exit_img, (150,150))
 
-
-class Button():
-    def __init__(self, x, y, image):
-        self.image = image
-        self.rect = self.image.get_rect()
-        self.rect.topleft = (x,y)
-
-        self.clicked = False
-
-    def draw(self):
-
-        action = False
-        mouse_position = pygame.mouse.get_pos()
-
-        if self.rect.collidepoint(mouse_position):
-            if pygame.mouse.get_pressed()[0] == 1 and self.clicked == False:
-                self.clicked = True
-                action = True
-        
-        if pygame.mouse.get_pressed()[0] == 0:
-            self.clicked = False
-
-        WIN.blit(self.image, (self.rect.x, self.rect.y))
-
-        return action
-
-
 play_button = button.Button(228,100, play_img)
 exit_button = button.Button(230,180, exit_img)
 
