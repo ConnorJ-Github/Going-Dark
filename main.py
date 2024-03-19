@@ -1,4 +1,6 @@
 import pygame
+import random
+
 import button
 
 pygame.init()
@@ -49,15 +51,27 @@ Background_image = pygame.image.load('Assets\Background_Image.png')
 play_button = button.Button(228,100, play_img)
 exit_button = button.Button(230,180, exit_img)
 
-key_button = button.Button(50,50, Golden_Key)
+#key_button = button.Button(50,50, Golden_Key)
 
 
 #Game FPS
 FPS = 60
 
 #Score
-
 score = 0
+
+
+def change_location():
+
+    global key_button
+
+    x_pos = (random.randrange(100,501))
+    y_pos = (random.randrange(1,501))
+
+    key_button = button.Button(x_pos, y_pos, Golden_Key)
+
+
+change_location()
 
 def current_score(score):
     score_text = font.render(f'Score: {score}', True, WHITE)
@@ -82,7 +96,7 @@ def draw_menu():
 def draw_game():
 
     global score
-    
+
 
     global main_menu
     main_menu = False
@@ -91,6 +105,7 @@ def draw_game():
     
     if key_button.draw(WIN):
         score += 1
+        change_location()
 
 
     current_score(score)
