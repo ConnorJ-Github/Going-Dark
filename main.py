@@ -19,7 +19,9 @@ pygame.display.set_caption("Going Dark")
 
 #Colours
 
-Background_CLR = (255,255,255) #WHite
+Background_CLR = (0,0,0) #WHite
+
+TXT_CLR = (255,255,255)
 
 WHITE = (255,255,255)
 BLACK = (0,0,0)
@@ -52,11 +54,12 @@ Background_image = pygame.image.load('Assets\Background_Image.png')
 #Sounds
 
 key_clicked = pygame.mixer.Sound('Assets\correct_ding.mp3')
+end_game = pygame.mixer.Sound('Assets/incorrect_ding.mp3')
 
 #Buttons
 
 play_button = button.Button(228,100, play_img)
-exit_button = button.Button(230,180, exit_img)
+exit_button = button.Button(230,220, exit_img)
 
 #key_button = button.Button(50,50, Golden_Key)
 
@@ -103,12 +106,12 @@ def draw_menu():
     WIN.fill(Background_CLR)
 
     #opens the file containing the highest score and reads it.
-    d = shelve.open('highscore.txt')
-    high_score = d['highscore']
-    d.close()
+    score_file = shelve.open('highscore.txt')
+    high_score = score_file['highscore']
+    score_file.close()
 
     if count_down == 0:
-        end_text = font.render('You ran out of time!', True, BLACK)
+        end_text = font.render('You ran out of time!', True, TXT_CLR)
         WIN.blit(end_text,(190,10))
 
 
@@ -122,12 +125,17 @@ def draw_menu():
         run = False
 
 
-    high_scoretxt = font.render(f'Highest Score: {high_score}', True, BLACK)
-    WIN.blit(high_scoretxt,(200,300))
+    high_scoretxt = font.render(f'Highest Score: {high_score}', True, TXT_CLR)
+    WIN.blit(high_scoretxt,(200,340))
+
+    last_scoretxt = font.render(f'Last Score: {score}', True, TXT_CLR)
+    WIN.blit(last_scoretxt,(230,390))
 
     
-    desc_text = font.render('Find the key to gain points!', True, BLACK)
+    desc_text = font.render('Find the key to gain points!', True, TXT_CLR)
     WIN.blit(desc_text,(150,500))
+
+    WIN.blit(Golden_Key, (280,550))
 
 
     pygame.display.update()
@@ -136,7 +144,7 @@ def draw_menu():
 
 def draw_game():
 
-    global score, count_down, main_menu, last_count, play_game
+    global score, count_down, main_menu, last_count, play_game, time_limit
 
     main_menu = False
 
@@ -160,6 +168,7 @@ def draw_game():
 
     if key_button.draw(WIN):
         score += 1
+        time_limit += 2
         key_clicked.play()
         change_location()
 
@@ -171,19 +180,22 @@ def draw_game():
             count_down -= 1
             last_count = count_timer
     elif count_down == 0:
-        #saves the score into the file if it is higher.
-        d = shelve.open('highscore.txt')
-        high_score = d['highscore']
+
+        end_game.play()
+
+        #saves the current score into the file if it is higher.
+        score_file = shelve.open('highscore.txt')
+        high_score = score_file['highscore']
         if score > high_score:
-            d['highscore'] = score
-            d.close()
+            score_file['highscore'] = score
+            score_file.close()
         
         #returns the player to the main menu.
         main_menu = True
 
 
 
-    current_score(score)
+    #current_score(score)
 
     pygame.display.update()
 
