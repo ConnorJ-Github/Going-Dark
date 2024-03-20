@@ -60,30 +60,12 @@ exit_button = button.Button(230,180, exit_img)
 #Game FPS
 FPS = 60
 
-#Get the current highest score
-
-#temp solution until other features added
-hs = 100
-
-#saves the score into the file
-d = shelve.open('highscore.txt')
-d['highscore'] = hs
-d.close()
-
-#opens the file
-d = shelve.open('highscore.txt')
-high_score = d['highscore']
-d.close()
-
-
-
 #Score
 score = 0
 
-
 #Countdown Timer
 
-time_limit = 5
+time_limit = 10
 
 count_down = time_limit
 
@@ -111,11 +93,16 @@ def current_score(score):
 
 def draw_menu():
 
-    global run, main_menu,play_game, count_down
+    global run, main_menu,play_game, count_down, score
 
     play_game = False
     
     WIN.fill(Background_CLR)
+
+    #opens the file containing the highest score and reads it.
+    d = shelve.open('highscore.txt')
+    high_score = d['highscore']
+    d.close()
 
     if count_down == 0:
         end_text = font.render('You ran out of time!', True, BLACK)
@@ -123,6 +110,7 @@ def draw_menu():
 
 
     if play_button.draw(WIN):
+        score = 0
         play_game = True
         count_down = time_limit
 
@@ -160,6 +148,14 @@ def draw_game():
             count_down -= 1
             last_count = count_timer
     elif count_down == 0:
+
+        #saves the score into the file if it is higher.
+        d = shelve.open('highscore.txt')
+        high_score = d['highscore']
+        if score > high_score:
+            d['highscore'] = score
+            d.close()
+
         main_menu = True
 
 
