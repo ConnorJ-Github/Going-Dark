@@ -34,6 +34,8 @@ main_menu = True
 
 play_game = False
 
+end_game = False
+
 #Images
 
 play_img = pygame.image.load('Assets\Play_Button.png')
@@ -79,6 +81,17 @@ d.close()
 score = 0
 
 
+#Countdown Timer
+
+time_limit = 5
+
+count_down = time_limit
+
+last_count = pygame.time.get_ticks()
+
+
+
+#Changes the key location when the key is pressed.
 def change_location():
 
     global key_button
@@ -88,9 +101,9 @@ def change_location():
 
     key_button = button.Button(x_pos, y_pos, Golden_Key)
 
-
 change_location()
 
+#Displays the players current score.
 def current_score(score):
     score_text = font.render(f'Score: {score}', True, WHITE)
     WIN.blit(score_text,(0,0))
@@ -98,12 +111,20 @@ def current_score(score):
 
 def draw_menu():
 
-    global run, main_menu,play_game, highest_score_num
+    global run, main_menu,play_game, count_down
+
+    play_game = False
     
     WIN.fill(Background_CLR)
 
+    if count_down == 0:
+        end_text = font.render('You ran out of time!', True, BLACK)
+        WIN.blit(end_text,(190,10))
+
+
     if play_button.draw(WIN):
         play_game = True
+        count_down = time_limit
 
 
     if exit_button.draw(WIN):
@@ -121,10 +142,8 @@ def draw_menu():
 
 def draw_game():
 
-    global score
+    global score, count_down, main_menu, last_count,end_game
 
-
-    global main_menu
     main_menu = False
 
     WIN.blit(Background_image, (0, 0))
@@ -133,10 +152,23 @@ def draw_game():
         score += 1
         change_location()
 
+    if count_down > 0:
+        count_text = font.render(f'{count_down}', True, WHITE)
+        WIN.blit(count_text, (290,0))
+        count_timer = pygame.time.get_ticks()
+        if count_timer - last_count > 1000:
+            count_down -= 1
+            last_count = count_timer
+    elif count_down == 0:
+        main_menu = True
+
+
 
     current_score(score)
 
     pygame.display.update()
+
+
 
 
 
@@ -155,6 +187,9 @@ while run:
     #if play_game is true, draws the game scene
     if play_game:
         draw_game()
+
+    if end_game:
+        draw_end()
 
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
