@@ -184,9 +184,6 @@ while run:
     if play_game:
         draw_game()
 
-    if end_game:
-        draw_end()
-
     for event in pygame.event.get():
         if event.type == pygame.QUIT:
             run = False
