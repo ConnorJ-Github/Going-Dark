@@ -1,5 +1,6 @@
 import pygame
 import random
+import shelve
 
 import button
 
@@ -42,7 +43,7 @@ exit_img = pygame.image.load('Assets\Exit_Button.png')
 exit_img = pygame.transform.scale(exit_img, (150,150))
 
 Golden_Key = pygame.image.load('Assets\Golden Key.png')
-Golden_Key = pygame.transform.scale(Golden_Key, (75,75))
+Golden_Key = pygame.transform.scale(Golden_Key, (30,30))
 
 Background_image = pygame.image.load('Assets\Background_Image.png')
 
@@ -57,6 +58,23 @@ exit_button = button.Button(230,180, exit_img)
 #Game FPS
 FPS = 60
 
+#Get the current highest score
+
+#temp solution until other features added
+hs = 100
+
+#saves the score into the file
+d = shelve.open('highscore.txt')
+d['highscore'] = hs
+d.close()
+
+#opens the file
+d = shelve.open('highscore.txt')
+high_score = d['highscore']
+d.close()
+
+
+
 #Score
 score = 0
 
@@ -65,8 +83,8 @@ def change_location():
 
     global key_button
 
-    x_pos = (random.randrange(100,501))
-    y_pos = (random.randrange(1,501))
+    x_pos = (random.randrange(30,501))
+    y_pos = (random.randrange(30,501))
 
     key_button = button.Button(x_pos, y_pos, Golden_Key)
 
@@ -80,7 +98,7 @@ def current_score(score):
 
 def draw_menu():
 
-    global run, main_menu,play_game
+    global run, main_menu,play_game, highest_score_num
     
     WIN.fill(Background_CLR)
 
@@ -90,6 +108,14 @@ def draw_menu():
 
     if exit_button.draw(WIN):
         run = False
+
+
+    high_scoretxt = font.render(f'Highest Score: {high_score}', True, BLACK)
+    WIN.blit(high_scoretxt,(200,300))
+
+    
+    desc_text = font.render('Find the key to gain points!', True, BLACK)
+    WIN.blit(desc_text,(150,500))
 
     pygame.display.update()
 
